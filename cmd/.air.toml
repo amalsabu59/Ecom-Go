@@ -1,0 +1,13 @@
+[build]
+# Path to the output binary with .exe extension
+bin = "../tmp/main.exe"
+# Build command with .exe extension
+cmd = "go build -o ../tmp/main.exe ./cmd"
+
+[watcher]
+# Include the root directory to watch for changes
+include = ["../"]
+# Exclude directories like build output and dependencies
+exclude = ["../tmp", "../vendor"]
+# Include Go files and other types if necessary
+extensions = ["go"]
