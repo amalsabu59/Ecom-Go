@@ -69,7 +69,7 @@ func UpdateAddress(w http.ResponseWriter, r *http.Request) {
 
 	path := strings.TrimPrefix(r.URL.Path, "/users/address/")
 	segments := strings.Split(path, "/")
-	fmt.Println("segments", len(segments) == 0, segments[1])
+	fmt.Println("segments", len(segments) == 0, segments[4])
 	// Assuming the ID is the first segment after the prefix
 	if len(segments) == 0 || segments[len(segments)-1] == "" {
 		http.Error(w, "Address ID is required", http.StatusBadRequest)

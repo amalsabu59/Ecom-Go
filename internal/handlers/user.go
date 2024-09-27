@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"gologin/internal/db"
 	"gologin/internal/logger"
 	"gologin/internal/models"
@@ -69,6 +70,8 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("Login called")
 	if r.Method != http.MethodPost {
 		utils.WriteResponse(w, http.StatusMethodNotAllowed, "Invalid request method", nil, nil)
 		return
@@ -122,17 +125,26 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	utils.WriteResponse(w, http.StatusOK, "Login successful", map[string]string{"token": token}, nil)
 }
 
-func GetUsersWithAddresses(w http.ResponseWriter, r *http.Request) {
+func GetUserWithAddresses(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		utils.WriteResponse(w, http.StatusMethodNotAllowed, "Invalid request method", nil, nil)
 		return
 	}
+	// type Key string
+
+	// const UserIDKey Key = "userID"
+	// userID, ok := r.Context().Value(UserIDKey).(int64)
+	// if !ok {
+	// 	http.Error(w, "User ID not found or invalid type", http.StatusUnauthorized)
+	// 	return
+	// }
 
 	var users []models.User
 
 	err := db.DB.NewSelect().
 		Model(&users).
 		Relation("Addresses").
+		Where("id = ?", 1). // Filter by user ID
 		Scan(r.Context())
 	if err != nil {
 		utils.WriteResponse(w, http.StatusInternalServerError, "Failed to fetch users with addresses", nil, err)

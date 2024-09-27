@@ -107,7 +107,7 @@ func TestGetUserProfile_Unauthorized(t *testing.T) {
 	req := httptest.NewRequest("GET", "/profile", nil)
 	w := httptest.NewRecorder()
 
-	handlers.GetUsersWithAddresses(w, req)
+	handlers.GetUserWithAddresses(w, req)
 
 	res := w.Result()
 	assert.Equal(t, http.StatusUnauthorized, res.StatusCode)
@@ -120,7 +120,7 @@ func TestGetUserProfile_NonExistentUser(t *testing.T) {
 	req = req.WithContext(ctx)
 	w := httptest.NewRecorder()
 
-	handlers.GetUsersWithAddresses(w, req)
+	handlers.GetUserWithAddresses(w, req)
 
 	res := w.Result()
 	assert.Equal(t, http.StatusInternalServerError, res.StatusCode) // Update based on your logic

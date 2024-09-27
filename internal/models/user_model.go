@@ -4,7 +4,7 @@ type User struct {
 	ID        int64      `bun:",pk,autoincrement" json:"id,omitempty"`
 	Name      string     `json:"name"`
 	Email     string     `json:"email"`
-	IsActive  bool       `json:"is_active"`
+	IsDeleted bool       `json:"is_deleted"`
 	Password  string     `json:"password,omitempty"`
 	Addresses []*Address `bun:"rel:has-many,join:id=user_id"`
 }

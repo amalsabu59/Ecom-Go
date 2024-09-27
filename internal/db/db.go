@@ -26,7 +26,12 @@ func SetupDB() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 
 	// dsn := os.Getenv("PG_DSN")
-	dsn := "postgresql://myuser:mypassword@localhost:5432/mydb?sslmode=disable"
+	// dsn := "postgresql://myuser:mypassword@localhost:5432/mydb?sslmode=disable"
+
+	dsn := "postgres://myuser:mypassword@host.docker.internal:5432/mydb?sslmode=disable"
+
+	// dsn := "postgresql://amal:WCwxvXnlHqqj5jyodTBuOA@bayou-salmon-5033.8nk.gcp-asia-southeast1.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full"
+
 	if dsn == "" {
 		log.Fatal().Msg("PG_DSN environment variable not set")
 	}
@@ -70,7 +75,7 @@ func Disconnect() {
 }
 
 // Migrate applies migrations to the database.
-func Migrate() {
+func Migrate() error {
 	ctx := context.Background()
 
 	migrator := migrate.NewMigrator(DB, migrations.Migrations)
@@ -81,27 +86,30 @@ func Migrate() {
 	}
 
 	// Apply migrations
-	if _, err := migrator.Migrate(ctx); err != nil {
+	migrated, err := migrator.Migrate(ctx) // Corrected variable name
+	if err != nil {
 		logger.Log.Fatal().Err(err).Msg("Migration failed")
 	}
 
-	logger.Log.Info().Msg("Migrations applied successfully")
-
+	logger.Log.Info().Msgf("Migrations applied successfully: %v", migrated)
+	return nil
 }
 
-// // Rollback reverts the last migration.
-// func Rollback() {
-// 	ctx := context.Background()
+// Rollback reverts the last migration.
+func Rollback() error {
+	ctx := context.Background()
 
-// 	migrator := migrate.NewMigrator(DB, migrations.Migrations)
+	migrator := migrate.NewMigrator(DB, migrations.Migrations)
 
-// 	// Rollback the last migration
-// 	if _, err := migrator.Rollback(ctx); err != nil {
-// 		logger.Log.Fatal().Err(err).Msg("Rollback failed")
-// 	}
+	// Rollback the last migration
+	rolledBack, err := migrator.Rollback(ctx)
+	if err != nil {
+		logger.Log.Fatal().Err(err).Msg("Rollback failed")
+	}
 
-// 	logger.Log.Info().Msg("Last migration rolled back successfully")
-// }
+	logger.Log.Info().Msgf("Rollbacks applied successfully: %v", rolledBack)
+	return nil
+}
 
 // CreateSQLMigration generates SQL migration files for PostgreSQL.
 func CreateSQLMigration(name string) error {
@@ -125,3 +133,5 @@ func CreateSQLMigration(name string) error {
 
 	return nil
 }
+
+// main function to handle command-line arguments

@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 	"gologin/internal/utils"
 	"net/http"
 )
@@ -28,8 +29,20 @@ func Authenticate(next http.Handler) http.Handler {
 			return
 		}
 		// Store the userID (or any other claims) in the context
+		fmt.Println(claims.UserID)
+		// ctx := context.WithValue(r.Context(), UserIDKey, claims.UserID)
 		ctx := context.WithValue(r.Context(), UserIDKey, claims.UserID)
 		// Pass the updated request with the new context to the next handler
 		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
+func RequireMethod(method string, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != method {
+			utils.WriteResponse(w, http.StatusMethodNotAllowed, "Invalid request method", nil, nil)
+			return
+		}
+		next.ServeHTTP(w, r)
 	})
 }

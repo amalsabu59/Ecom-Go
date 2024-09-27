@@ -5,7 +5,6 @@ import (
 	"gologin/internal/logger"
 
 	"github.com/uptrace/bun"
-	"github.com/uptrace/bun/migrate"
 )
 
 // AlterUsersTable handles schema changes like adding/removing columns.
@@ -37,10 +36,10 @@ func (m *AlterUsersTable) Down(ctx context.Context, db *bun.DB) error {
 
 func init() {
 
-	// Register the schema change migration.
-	alterTableMigration := &AlterUsersTable{}
-	Migrations.MustRegister(
-		migrate.MigrationFunc(alterTableMigration.Up),
-		migrate.MigrationFunc(alterTableMigration.Down),
-	)
+	// // Register the schema change migration.
+	// alterTableMigration := &AlterUsersTable{}
+	// Migrations.MustRegister(
+	// 	migrate.MigrationFunc(alterTableMigration.Up),
+	// 	migrate.MigrationFunc(alterTableMigration.Down),
+	// )
 }

@@ -1,13 +1,30 @@
-[build]
-# Path to the output binary with .exe extension
-bin = "../tmp/main.exe"
-# Build command with .exe extension
-cmd = "go build -o ../tmp/main.exe ./cmd"
+# Configuration file for Air
 
+# Build configuration
+[build]
+# Path to the output binary (no .exe extension for Linux)
+bin = "../tmp/main"  # Adjust the path if necessary
+# Build command to compile the Go application
+cmd = "go build -o ../tmp/main ./cmd"  # Ensure this matches your project structure
+
+# Watcher configuration
 [watcher]
-# Include the root directory to watch for changes
-include = ["../"]
-# Exclude directories like build output and dependencies
-exclude = ["../tmp", "../vendor"]
-# Include Go files and other types if necessary
-extensions = ["go"]
+# Include directories to watch for changes (you can specify the exact paths)
+include = ["../"]  # Watching the parent directory; adjust as needed
+# Exclude directories such as build output and dependencies
+exclude = ["../tmp", "../vendor"]  # Prevent watching temporary and vendor directories
+# Include file extensions to watch for changes
+extensions = ["go", "tpl", "html"]  # Consider adding template files if applicable
+
+# Log configuration
+[log]
+# Log file location
+log = "tmp/air.log"  # Logs will be stored in the tmp directory
+# Log level (debug, info, warn, error)
+level = "debug"  # Set log level as needed
+
+poll = true
+# Environment configuration (if needed)
+[env]
+# Set environment variables for the application
+# Example: MY_VAR = "value"

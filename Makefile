@@ -9,3 +9,10 @@ test:
 
 build:
 	go build -o yourapp ./cmd/main.go   
+
+
+migrate:
+	go run cmd/main.go migrate
+
+rollback:
+	go run cmd/main.go rollback
